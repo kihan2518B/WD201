@@ -69,11 +69,11 @@ if (portinput === undefined) {
             response.writeHeader(200, { "Content-Type": "Text/html" });
 
             switch (url) {
-                case "/project.html":
+                case "/project":
                     response.write(projectpage);
                     response.end();
                     break;
-                case "/registration.html":
+                case "/registration":
                     response.write(registrationform);
                     response.end();
                     break;
