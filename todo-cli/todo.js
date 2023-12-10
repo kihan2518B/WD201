@@ -31,7 +31,7 @@ const todoList = () => {
         return list.map((item) => {
             // Format each item as per the desired output
             const status = item.completed ? '[x]' : '[ ]';
-            const dueDate = item.dueDate === today ? '' : `(Due: ${item.dueDate})`;
+            const dueDate = item.dueDate === today ? '' : `${item.dueDate}`;
             return `${status} ${item.title} ${dueDate}`;
         }).join('\n');
     }
