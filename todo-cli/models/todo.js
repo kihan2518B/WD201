@@ -12,6 +12,7 @@
 //     static associate(models) {
 //       // define association here
 //     }
+
 //     static async markAsComplete(id) {
 //       try {
 //         const todo = await Todo.findByPk(id);
@@ -29,6 +30,7 @@
 //         throw error;
 //       }
 //     }
+
 //     static async addTask(params) {
 //       try {
 //         const newTask = await Todo.create({
@@ -45,6 +47,7 @@
 //         throw error;
 //       }
 //     }
+
 //     static async showList() {
 //       const todos = await Todo.findAll();
 
@@ -128,6 +131,23 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
+    static async addTask(params) {
+      try {
+        const newTask = await Todo.create({
+          title: params.title,
+          DueDate: params.dueDate, // Use correct case for DueDate
+          completed: params.completed,
+        });
+
+        console.log("New Task:", newTask.toJSON());
+
+        return newTask;
+      } catch (error) {
+        console.error('Error adding task:', error.message);
+        throw error;
+      }
+    }
+
     static async overdue() {
       const todos = await Todo.findAll();
       return todos.filter(todo => todo.DueDate && new Date(todo.DueDate) < new Date());
@@ -153,7 +173,10 @@ module.exports = (sequelize, DataTypes) => {
 
       if (todo.DueDate) {
         const dueDate = new Date(todo.DueDate);
-        dueDateString = todo.completed ? '' : ` ${dueDate.toLocaleDateString()}`;
+        const year = dueDate.getFullYear();
+        const month = (dueDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = dueDate.getDate().toString().padStart(2, '0');
+        dueDateString = todo.completed ? ` ${year}-${month}-${day}` : '';
       }
 
       return `${todo.id}. ${checkbox} ${todo.title}${dueDateString}`;
@@ -161,53 +184,12 @@ module.exports = (sequelize, DataTypes) => {
 
     static async printTask(tasks) {
       const resolvedTasks = await Promise.all(tasks);
-      resolvedTasks.forEach(task => {
-        console.log(task);
+      resolvedTasks.forEach(async (task, index) => {
+        const resolvedTask = await task; // Ensure the promise is resolved
+        console.log(`${index + 1}. ${await Todo.displayableString(resolvedTask)}`);
       });
     }
 
-    // static async showList() {
-    //   const todos = await Todo.findAll();
-
-    //   // Categorize tasks based on due dates
-    //   const overdue = [];
-    //   const dueToday = [];
-    //   const dueLater = [];
-
-    //   const today = new Date();
-    //   today.setHours(0, 0, 0, 0);
-
-    //   todos.forEach((todo) => {
-    //     const dueDate = new Date(todo.DueDate);
-
-    //     if (isNaN(dueDate.getTime())) {
-    //       console.error(`Invalid due date for task with ID ${todo.id}`);
-    //       return;
-    //     }
-
-    //     dueDate.setHours(0, 0, 0, 0);
-
-    //     if (dueDate < today) {
-    //       overdue.push(todo);
-    //     } else if (dueDate.getTime() === today.getTime()) {
-    //       dueToday.push(todo);
-    //     } else {
-    //       dueLater.push(todo);
-    //     }
-    //   });
-
-    //   // Print the categorized tasks
-    //   console.log('My Todo-list\n');
-
-    //   console.log('Overdue');
-    //   Todo.printTask(overdue);
-
-    //   console.log('\nDue Today');
-    //   Todo.printTask(dueToday);
-
-    //   console.log('\nDue Later');
-    //   Todo.printTask(dueLater);
-    // }
     static async showList() {
       const overdue = await Todo.overdue();
       const dueToday = await Todo.dueToday();
@@ -225,15 +207,6 @@ module.exports = (sequelize, DataTypes) => {
       console.log('\nDue Later');
       await Todo.printTask(dueLater);
     }
-
-    // Add this updated printTask method to your Todo class
-    static async printTask(tasks) {
-      const resolvedTasks = await Promise.all(tasks);
-      resolvedTasks.forEach(async (task, index) => {
-        const resolvedTask = await task; // Ensure the promise is resolved
-        console.log(`${index + 1}. ${await Todo.displayableString(resolvedTask)}`);
-      });
-    }
   }
 
   Todo.init({
@@ -247,3 +220,4 @@ module.exports = (sequelize, DataTypes) => {
 
   return Todo;
 };
+
