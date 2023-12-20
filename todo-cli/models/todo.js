@@ -223,9 +223,9 @@ module.exports = (sequelize, DataTypes) => {
     // Add this updated printTask method to your Todo class
     static async printTask(tasks) {
       const resolvedTasks = await Promise.all(tasks);
-      resolvedTasks.forEach(async task => {
+      resolvedTasks.forEach(async (task, index) => {
         const resolvedTask = await task; // Ensure the promise is resolved
-        console.log(`${resolvedTask.id}. ${await Todo.displayableString(resolvedTask)}`);
+        console.log(`${index + 1}. ${await Todo.displayableString(resolvedTask)}`);
       });
     }
   }
