@@ -149,8 +149,7 @@ module.exports = (sequelize, DataTypes) => {
 
     static async displayableString(todo) {
       const checkbox = todo.completed ? '[x]' : '[ ]';
-      const dueDateString = todo.DueDate ? ` ${todo.DueDate.toLocaleDateString()}` : '';
-
+      const dueDateString = todo.DueDate ? ` ${todo.DueDate}` : '';
       return `${todo.id}. ${checkbox} ${todo.title}${dueDateString}`;
     }
 
@@ -219,6 +218,15 @@ module.exports = (sequelize, DataTypes) => {
 
       console.log('\nDue Later');
       await Todo.printTask(dueLater);
+    }
+
+    // Add this updated printTask method to your Todo class
+    static async printTask(tasks) {
+      const resolvedTasks = await Promise.all(tasks);
+      resolvedTasks.forEach(async task => {
+        const resolvedTask = await task; // Ensure the promise is resolved
+        console.log(`${resolvedTask.id}. ${await Todo.displayableString(resolvedTask)}`);
+      });
     }
   }
 
