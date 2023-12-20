@@ -149,7 +149,13 @@ module.exports = (sequelize, DataTypes) => {
 
     static async displayableString(todo) {
       const checkbox = todo.completed ? '[x]' : '[ ]';
-      const dueDateString = todo.DueDate ? ` ${todo.DueDate}` : '';
+      let dueDateString = '';
+
+      if (todo.DueDate) {
+        const dueDate = new Date(todo.DueDate);
+        dueDateString = todo.completed ? '' : ` ${dueDate.toLocaleDateString()}`;
+      }
+
       return `${todo.id}. ${checkbox} ${todo.title}${dueDateString}`;
     }
 
