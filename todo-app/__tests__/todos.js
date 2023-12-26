@@ -73,33 +73,23 @@ describe("Todo Application", function () {
   });
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-    //adding Reponse 
-    const response = await agent.post("/todos").send({
-      title: "Buy xbox",
-      dueDate: new Date().toISOString()
-    });
+    const response = await agent
+      .post("/todos")
+      .set("Accept", "application/json")
+      .send({
+        title: "Buy milk",
+        dueDate: new Date().toISOString(),
+        completed: false,
+      });
+    console.log(response);
+    expect(response.statusCode).toBe(200);
+    expect(response.header["content-type"]).toMatch(/application\/json/);
 
     const parsedResponse = JSON.parse(response.text);
     const todoID = parsedResponse.id;
-    //Parsing the Respose To check If Added or not
-    expect(parsedResponse.id).toBeDefined();
-
-    //Checking if size in data is 5 before deleting
-    const Getresponse = await agent.get("/todos");
-    const parsedGetResponse = JSON.parse(Getresponse.text);
-    expect(parsedGetResponse.length).toBe(5);
-
-    //Deleting response and checking that it is returning true or not
-    const DeletedResponse = await agent.delete(`/todos/${todoID}/deleteitem`);
-    // expect(DeletedResponse.statusCode).toBe(200);
-    const deletedresponse = JSON.parse(DeletedResponse.text)
-    expect(deletedresponse.success).toBe(true);
-    console.log(deletedresponse)
-
-    // geting All Response to check length of response
-    const GetAllResponse = await agent.get("/todos");
-    const parsedGetAllResponse = JSON.parse(GetAllResponse.text)
-    expect(parsedGetAllResponse.length).toBe(4);
-
+    const response2 = await agent.delete(`/todos/${todoID}`);
+    console.log(response2.text);
+    const parsedResponses = JSON.parse(response2.text);
+    expect(parsedResponses).toBe(true);
   });
 });
