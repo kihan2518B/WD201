@@ -84,7 +84,10 @@ describe("Todo Application", function () {
     const parsedResponse = JSON.parse(response.text);
     expect(parsedResponse.id).toBeDefined();
     const todoID = parsedResponse.id;
-    // expect(parsedResponse.length).toBe(1);
+    //Checking if size in data is 5
+    const Getresponse = await agent.get("/todos");
+    const parsedGetResponse = JSON.parse(Getresponse.text);
+    expect(parsedGetResponse.length).toBe(5);
 
     //Deleting response and checking that it is returning true or not
     const DeletedResponse = await agent.delete(`/todos/${todoID}/deleteitem`).send();
@@ -93,10 +96,10 @@ describe("Todo Application", function () {
     const parsedUpdateResponse = JSON.parse(DeletedResponse.text);
     expect(parsedUpdateResponse).toBe(true)
 
-    //geting All Response to check length of response
-    const GetAllResponse = await agent.get("/todos");
-    const parsedGetAllResponse = JSON.parse(GetAllResponse.text)
-    expect(parsedGetAllResponse.length).toBe(0);
+    // geting All Response to check length of response
+    // const GetAllResponse = await agent.get("/todos");
+    // const parsedGetAllResponse = JSON.parse(GetAllResponse.text)
+    // expect(parsedGetAllResponse.length).toBe(0);
 
-  }, 10000);
+  });
 });

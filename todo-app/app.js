@@ -62,12 +62,12 @@ app.delete("/todos/:id/deleteitem", async function (request, response) {
   const todo = await Todo.findByPk(request.params.id);
   // FILL IN YOUR CODE HERE
   try {
-    await todo.destroy()
+    await todo.deletetodo()
     console.log(`Item with id:${ID} Deleted`)
-    response.send.true
+    response.send(true)
   } catch (error) {
     console.log(error)
-    response.send.false
+    response.send(false)
   }
   // First, we have to query our database to delete a Todo by ID.
   // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
