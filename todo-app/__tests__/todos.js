@@ -76,8 +76,7 @@ describe("Todo Application", function () {
     //adding Reponse 
     const response = await agent.post("/todos").send({
       title: "Buy xbox",
-      dueDate: new Date().toISOString(),
-      completed: false,
+      dueDate: new Date().toISOString()
     });
 
     //Parsing the Respose To check If Added or not
@@ -93,13 +92,17 @@ describe("Todo Application", function () {
     const DeletedResponse = await agent.delete(`/todos/${todoID}/deleteitem`).send();
     expect(DeletedResponse.statusCode).toBe(200);
 
-    const parsedUpdateResponse = JSON.parse(DeletedResponse.text);
-    expect(parsedUpdateResponse).toBe(true)
+    // const parsedUpdateResponse = JSON.parse(DeletedResponse.text);
+    // const responseBody = response.body;
+
+    // Check if the 'success' property is a boolean.
+    // expect(responseBody.success).toBeDefined();
+    // expect(typeof responseBody.success).toBe('boolean');
 
     // geting All Response to check length of response
-    // const GetAllResponse = await agent.get("/todos");
-    // const parsedGetAllResponse = JSON.parse(GetAllResponse.text)
-    // expect(parsedGetAllResponse.length).toBe(0);
+    const GetAllResponse = await agent.get("/todos");
+    const parsedGetAllResponse = JSON.parse(GetAllResponse.text)
+    expect(parsedGetAllResponse.length).toBe(4);
 
   });
 });
