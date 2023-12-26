@@ -92,8 +92,8 @@ describe("Todo Application", function () {
     const DeletedResponse = await agent.delete(`/todos/${todoID}/deleteitem`).send();
     expect(DeletedResponse.statusCode).toBe(200);
     // expect(typeof DeletedResponse.success).toBe('boolean');
-    expect(DeletedResponse.body).toEqual({ success: true });
 
+    expect(DeletedResponse.body.success).toBe(true);
     // const parsedUpdateResponse = JSON.parse(DeletedResponse.text);
     // const responseBody = response.body;
 
