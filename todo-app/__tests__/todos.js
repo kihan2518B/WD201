@@ -79,26 +79,21 @@ describe("Todo Application", function () {
       dueDate: new Date().toISOString()
     });
 
-    //Parsing the Respose To check If Added or not
     const parsedResponse = JSON.parse(response.text);
-    expect(parsedResponse.id).toBeDefined();
     const todoID = parsedResponse.id;
-    //Checking if size in data is 5
+    //Parsing the Respose To check If Added or not
+    expect(parsedResponse.id).toBeDefined();
+
+    //Checking if size in data is 5 before deleting
     const Getresponse = await agent.get("/todos");
     const parsedGetResponse = JSON.parse(Getresponse.text);
     expect(parsedGetResponse.length).toBe(5);
 
     //Deleting response and checking that it is returning true or not
-    const DeletedResponse = await agent.delete(`/todos/${todoID}/deleteitem`).send();
+    const DeletedResponse = await agent.delete(`/todos/${todoID}/deleteitem`);
     expect(DeletedResponse.statusCode).toBe(200);
-    // expect(typeof DeletedResponse.success).toBe('boolean');
-
-    expect(DeletedResponse.body.success).toBe(true);
-    // const parsedUpdateResponse = JSON.parse(DeletedResponse.text);
-    // const responseBody = response.body;
-
-    // Check if the 'success' property is a boolean.
-    // expect(responseBody.success).toBeDefined();
+    const deletedresponse = JSON.parse(DeletedResponse.text)
+    expect(deletedresponse).toBe(true);
 
     // geting All Response to check length of response
     const GetAllResponse = await agent.get("/todos");
