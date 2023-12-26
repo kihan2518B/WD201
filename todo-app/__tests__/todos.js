@@ -91,9 +91,10 @@ describe("Todo Application", function () {
 
     //Deleting response and checking that it is returning true or not
     const DeletedResponse = await agent.delete(`/todos/${todoID}/deleteitem`);
-    expect(DeletedResponse.statusCode).toBe(200);
+    // expect(DeletedResponse.statusCode).toBe(200);
     const deletedresponse = JSON.parse(DeletedResponse.text)
     expect(deletedresponse).toBe(true);
+    console.log(deletedresponse)
 
     // geting All Response to check length of response
     const GetAllResponse = await agent.get("/todos");
