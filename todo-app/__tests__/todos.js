@@ -91,13 +91,14 @@ describe("Todo Application", function () {
     //Deleting response and checking that it is returning true or not
     const DeletedResponse = await agent.delete(`/todos/${todoID}/deleteitem`).send();
     expect(DeletedResponse.statusCode).toBe(200);
+    // expect(typeof DeletedResponse.success).toBe('boolean');
+    expect(DeletedResponse.body).toEqual({ success: true });
 
     // const parsedUpdateResponse = JSON.parse(DeletedResponse.text);
     // const responseBody = response.body;
 
     // Check if the 'success' property is a boolean.
     // expect(responseBody.success).toBeDefined();
-    // expect(typeof responseBody.success).toBe('boolean');
 
     // geting All Response to check length of response
     const GetAllResponse = await agent.get("/todos");
