@@ -64,8 +64,8 @@ app.delete("/todos/:id/deleteitem", async function (request, response) {
   try {
     const deleteTodo = await todo.deletetodo()
     console.log(`Item with id:${ID} Deleted`)
-    response.send(deleteTodo ? true : false);
-    // response.send({ success: true });
+    // response.send(deleteTodo ? true : false);
+    response.send({ success: true });
   } catch (error) {
     console.log(error)
     return response.status(422).json(err);
