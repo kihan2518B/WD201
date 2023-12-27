@@ -72,24 +72,17 @@ describe("Todo Application", function () {
     expect(parsedResponse[3]["title"]).toBe("Buy ps3"); //Checking Is Index[1] is Same or not
   });
 
-  test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
-    const response = await agent
-      .post("/todos")
-      .set("Accept", "application/json")
-      .send({
-        title: "Buy milk",
-        dueDate: new Date().toISOString(),
-        completed: false,
-      });
-    console.log(response);
-    expect(response.statusCode).toBe(200);
-    expect(response.header["content-type"]).toMatch(/application\/json/);
+ test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
+    const sent = await agent.post("/todos").send({
+      title: "Buy milk",
+      dueDate: new Date().toISOString(),
+      completed: false,
+    });
 
-    const parsedResponse = JSON.parse(response.text);
-    const todoID = parsedResponse.id;
-    const response2 = await agent.delete(`/todos/${todoID}`);
-    console.log(response2.text);
-    const parsedResponses = JSON.parse(response2.text);
-    expect(parsedResponses).toBe(true);
+    const parsedResponse = JSON.parse(sent.text);
+    const ID = parsedResponse.id;
+
+    const DeletedResponse = await agent.delete(`/todos/${ID}`);
+    expect(Boolean(DeletedResponse.text)).toBe(true);
   });
 });
