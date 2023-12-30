@@ -1,136 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css">
-    <title>User-Form</title>
-  </head>
-  <body>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(to right, #3498db, #6dd5fa);
-        display: flex;
-        min-height: 100vh;
-        margin: 0;
-      }
-      .user-form {
-        align-content: center;
-        position: relative;
-        background: linear-gradient(to left, #3498db, #6dd5fa);
-        border-radius: 8px;
-        box-shadow: 0 0 200px rgba(0, 0, 0, 0.2);
-        padding: 10px;
-        text-align: center;
-        width: 300px;
-        margin: 100px;
-        max-width: 100%;
-      }
 
-      .login-container h2 {
-        color: #333;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+  <title>User-Form</title>
+</head>
 
-      .login-form {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
+<body>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #3498db, #6dd5fa);
+      display: flex;
+      min-height: 100vh;
+      margin: 0;
+    }
 
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
+    .user-form {
+      align-content: center;
+      position: relative;
+      background: linear-gradient(to left, #3498db, #6dd5fa);
+      border-radius: 8px;
+      box-shadow: 0 0 200px rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      text-align: center;
+      width: 300px;
+      margin: 100px;
+      max-width: 100%;
+    }
 
-      .input-group label {
-        font-weight: bold;
-        margin-bottom: 6px;
-        
-      }
+    .login-container h2 {
+      color: #333;
+    }
 
-      .input-group input {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-      }
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-      .input-group button {
-        background: linear-gradient(to right, #3498db, #6dd5fa);
-        color: #fff;
-        width: 70px;
-        border: none;
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 5px;
-        font-size: 16px;
-        max-height: fit-content;
-        cursor: pointer;
-        justify-items: center;
-        text-align: center;
-        transition: background 3s;
-      }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
-      .input-group button:hover {
-        background: linear-gradient(to right, #6dd5fa, #3498db);
-      }
-    </style>
-    <div>
+    .input-group label {
+      font-weight: bold;
+      margin-bottom: 6px;
+
+    }
+
+    .input-group input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .input-group button {
+      background: linear-gradient(to right, #3498db, #6dd5fa);
+      color: #fff;
+      width: 70px;
+      border: none;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      max-height: fit-content;
+      cursor: pointer;
+      justify-items: center;
+      text-align: center;
+      transition: background 3s;
+    }
+
+    .input-group button:hover {
+      background: linear-gradient(to right, #6dd5fa, #3498db);
+    }
+  </style>
+  <div>
     <form id="user-form" class="user-form">
       <div class="input-group">
         <label for="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Enter your name"
-          required
-          autocomplete="name"
-        />
+        <input type="text" id="name" name="name" placeholder="Enter your name" required autocomplete="name" />
       </div>
       <div class="input-group">
         <label for="email">Email</label>
-        <input
-          type="text"
-          id="email"
-          name="email"
-          placeholder="Enter your Email Address"
-          required
-          autocomplete="email"
-        />
+        <input type="text" id="email" name="email" placeholder="Enter your Email Address" required
+          autocomplete="email" />
       </div>
       <div class="input-group">
         <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Enter your Password"
-          required
-          autocomplete="new-password"
-        />
+        <input type="password" id="password" name="password" placeholder="Enter your Password" required
+          autocomplete="new-password" />
       </div>
       <div class="input-group">
         <label for="dob">Date of Birth</label>
         <input type="Date" id="dob" name="dob" required />
 
-        <div >
-        <label for="accecptterms">Accept Terms and conditions</label>
-        <input type="checkbox" id="accecptterms"name="accecptterms" />
-        <button type="submit" onclick="saveUserForm(event)">Submit</button>
+        <div>
+          <label for="accecptterms">Accept Terms and conditions</label>
+          <input type="checkbox" id="accecptterms" name="accecptterms" />
+          <button type="submit" onclick="saveUserForm(event)">Submit</button>
         </div>
       </div>
     </form>
-    <h2 style="top: 0px; left: 200px; position: relative;">Entries:</h2> 
-    
-    <div style="position:relative; margin-top: 50px; background-color: aqua; word-spacing: 1px; height: max-content; " id="UserEntries">
-    
-    </div>
-    </div>
+    <h2 style="top: 0px; left: 200px; position: relative;">Entries:</h2>
 
-  </body>
-  <script src="./index.js"></script>
+    <div style="position:relative; margin-top: 50px; background-color: aqua; word-spacing: 1px; height: max-content; "
+      id="UserEntries">
+
+    </div>
+  </div>
+
+</body>
+<script src="./index.js"></script>
+
 </html>

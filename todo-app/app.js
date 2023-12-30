@@ -1,23 +1,11 @@
 const express = require("express");
 const app = express();
 const { Todo } = require("./models");
-const path = require('path');
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
-app.set("view engine", "ejs");
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get("/", async function (request, response) {
-  const allTodos = await Todo.getTodo();
-  if (request.accepts('html')) {
-    response.render('index', {
-      allTodos
-    })
-  } else {
-    response.json(allTodos)
-  }
+app.get("/", function (request, response) {
+  response.send("Hello World");
 });
 
 app.get("/todos", async function (_request, response) {
@@ -68,23 +56,20 @@ app.put("/todos/:id/markAsCompleted", async function (request, response) {
   }
 });
 
-app.delete("/todos/:id/deleteitem", async function (request, response) {
-  console.log("We have to delete a Todo with ID: ", request.params.id);
-  const ID = request.params.id
-  const todo = await Todo.findByPk(ID);
-  // FILL IN YOUR CODE HERE
+app.delete("/todos/:id", async (request, response) => {
+  console.log("Delete a todo by ID:", request.params.id);
+
   try {
-    const deleteTodo = await todo.deletetodo()
-    console.log(`Item with id:${ID} Deleted`)
-    response.send(deleteTodo ? true : false); //These Are Two types of boolean responses
-    // response.send({ success: true });
+    const deletedItem = await Todo.destroy({
+      where: {
+        id: request.params.id,
+      },
+    });
+    response.send(deletedItem ? true : false);
   } catch (error) {
-    console.log(error)
-    return response.status(422).json(err);
+    console.error(error);
+    return response.status(442).json(error);
   }
-  // First, we have to query our database to delete a Todo by ID.
-  // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
-  // response.send(true)
 });
 
 module.exports = app;
