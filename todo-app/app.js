@@ -1,22 +1,34 @@
 const express = require("express");
 const app = express();
 const { Todo } = require("./models");
+const path = require("path");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
-app.get("/", function (request, response) {
-  response.send("Hello World");
+app.get("/", async function (request, response) {
+  // response.send("Hello World");
+  const allTodo = await Todo.getTodo();
+  if (request.accepts("html")) {
+    response.render("index", {
+      allTodo,
+    });
+  } else {
+    response.json({ allTodo });
+  }
 });
+
+app.use(express.static(path.join(__dirname, "public")));
+app.set("view engine", "ejs");
 
 app.get("/todos", async function (_request, response) {
   console.log("Processing list of all Todos ...");
 
   // FILL IN YOUR CODE HERE
   try {
-    const todos = await Todo.findAll()
+    const todos = await Todo.findAll();
     return response.json(todos);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return response.status(500).json({ error: "Internal Server Error" });
   }
 
