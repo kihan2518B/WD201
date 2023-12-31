@@ -10,17 +10,8 @@
 
 <body>
     <%- include('header.ejs') %>
-
-        <table>
-            <% for( var i=0; i< allTodo.length; i++){ %>
-                <tr>
-                    <td>
-                        todo1
-                        <%= allTodo[i].title %>
-                    </td>
-                </tr>
-                <% } %>
-        </table>
+        <%- include('index.ejs') %>
+            <%- include('footer.ejs') %>
 </body>
 
 </html>
