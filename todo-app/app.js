@@ -3,6 +3,7 @@ const app = express();
 const { Todo } = require("./models");
 const path = require("path");
 const bodyParser = require("body-parser");
+
 app.use(bodyParser.json());
 
 app.get("/", async function (request, response) {
