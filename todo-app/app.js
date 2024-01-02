@@ -9,9 +9,16 @@ app.use(bodyParser.json());
 app.get("/", async function (request, response) {
   // response.send("Hello World");
   const allTodo = await Todo.getTodo();
+  const overdueTodos = await Todo.overdue();
+  const dueTodayTodos = await Todo.dueToday();
+  const dueLaterTodos = await Todo.dueLater();
+
   if (request.accepts("html")) {
     response.render("index", {
       allTodo,
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
     });
   } else {
     response.json({ allTodo });

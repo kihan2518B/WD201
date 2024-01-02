@@ -1,19 +1,18 @@
 <table>
-    <% for( var i=0; i< allTodo.length; i++){ %>
-        <tr>
-            <td>
-                <%= allTodo[i].title %>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <%= allTodo[i].dueDate %>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <%= allTodo[i].completed %>
-            </td>
-        </tr>
-        <% } %>
+    <tbody>
+        <% for(var i=0; i < allTodo.length; i++) { %>
+            <tr>
+                <td class="Todo-Item">
+                    <div class="flex items-center w-fit my-2 px-2 py-1 rounded hover:bg-purple-50 ml-5">
+
+                        <label class="ml-2 text-sm cursor-pointer text-gray-900">
+                            <%= allTodo[i].title %>
+                                <%= allTodo[i].dueDate %>
+                        </label>
+
+                    </div>
+                </td>
+            </tr>
+            <% } %>
+    </tbody>
 </table>
