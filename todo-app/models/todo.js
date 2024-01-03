@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     static getTodo() {
       return this.findAll();
     }
-    deletetodo() {
+    static deletetodo() {
       return this.destroy();
     }
 
@@ -56,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
         order: [["id", "ASC"]],
       });
     }
-    markAsCompleted() {
+    static markAsCompleted() {
       return this.update({ completed: true });
     }
   }

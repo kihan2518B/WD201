@@ -3,6 +3,7 @@ const app = express();
 const { Todo } = require("./models");
 const path = require("path");
 const bodyParser = require("body-parser");
+app.use(express.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
 
@@ -12,6 +13,8 @@ app.get("/", async function (request, response) {
   const overdueTodos = await Todo.overdue();
   const dueTodayTodos = await Todo.dueToday();
   const dueLaterTodos = await Todo.dueLater();
+  // const markAsCompleted = await Todo.markAsCompleted();
+  // const Delete = await Todo.deletetodo()
 
   if (request.accepts("html")) {
     response.render("index", {
@@ -57,8 +60,11 @@ app.get("/todos/:id", async function (request, response) {
 
 app.post("/todos", async function (request, response) {
   try {
-    const todo = await Todo.addTodo(request.body);
-    return response.json(todo);
+    await Todo.addTodo({
+      title: request.body.title,
+      dueDate: request.body.dueDate,
+    });
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);

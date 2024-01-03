@@ -118,22 +118,6 @@ table {
     position: relative;
 }
 
-/* <!-- <table>
-    <% for( var i=0; i< allTodo.length; i++){ %>
-        <tr>
-            <td>
-                <%= allTodo[i].title %>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <%= allTodo[i].dueDate %>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <%= allTodo[i].completed %>
-            </td>
-        </tr>
-
-</table> --> */
+.Todo-Item:hover .trash-icon {
+    display: block;
+}
