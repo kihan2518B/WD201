@@ -14,7 +14,7 @@ app.get("/", async function (request, response) {
   const dueTodayTodos = await Todo.dueToday();
   const dueLaterTodos = await Todo.dueLater();
   // const markAsCompleted = await Todo.markAsCompleted();
-  // const Delete = await Todo.deletetodo()
+  // const Delete = await Todo.deletetodo({ where: { id: Todo.id } })
 
   if (request.accepts("html")) {
     response.render("index", {
@@ -71,10 +71,10 @@ app.post("/todos", async function (request, response) {
   }
 });
 
-app.put("/todos/:id/markAsCompleted", async function (request, response) {
+app.put("/todos/:id", async function (request, response) {
   const todo = await Todo.findByPk(request.params.id);
   try {
-    const updatedTodo = await todo.markAsCompleted();
+    const updatedTodo = await todo.markAsCompleted(true);
     return response.json(updatedTodo);
   } catch (error) {
     console.log(error);

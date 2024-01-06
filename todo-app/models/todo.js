@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       return this.findAll();
     }
     static deletetodo() {
-      return this.destroy();
+      return this.destroy({ where: { id: this.id } });
     }
 
     static async dueLater() {
@@ -56,8 +56,8 @@ module.exports = (sequelize, DataTypes) => {
         order: [["id", "ASC"]],
       });
     }
-    static markAsCompleted() {
-      return this.update({ completed: true });
+    markAsCompleted(bool) {
+      return this.update({ completed: bool });
     }
   }
   Todo.init(
