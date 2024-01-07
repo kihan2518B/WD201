@@ -3,7 +3,12 @@ const app = express();
 const { Todo } = require("./models");
 const path = require("path");
 const bodyParser = require("body-parser");
+const csrf = require("csurf");
+const cookieParser = require("cookie-parser");
+
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser("Shh! some secret string"));
+app.use(csrf({ cookie: true }));
 
 app.use(bodyParser.json());
 
@@ -24,6 +29,7 @@ app.get("/", async function (request, response) {
       dueTodayTodos,
       dueLaterTodos,
       completed,
+      csrfToken: request.csrfToken(), //csrfToken() generates csrf token and return it and poperty name is csrfToken
     });
   } else {
     response.json({
