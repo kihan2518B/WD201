@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     static getTodo() {
       return this.findAll();
     }
-    static deletetodo() {
-      return this.destroy({ where: { id: this.id } });
+    static deletetodo(id) {
+      return this.destroy({ where: { id } });
     }
 
     static async dueLater() {
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.gt]: new Date().toISOString().split("T")[0],
           },
-          completed: false,
+          // completed: false,
         },
         order: [["id", "ASC"]],
       });
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.lt]: new Date().toISOString().split("T")[0],
           },
-          completed: false,
+          // completed: false,
         },
         order: [["id", "ASC"]],
       });
@@ -51,13 +51,25 @@ module.exports = (sequelize, DataTypes) => {
           dueDate: {
             [Op.eq]: new Date().toISOString().split("T")[0],
           },
-          completed: false,
+          // completed: false,
         },
         order: [["id", "ASC"]],
       });
     }
-    markAsCompleted(bool) {
-      return this.update({ completed: bool });
+
+    static completedItem() {
+      //In order to get only completed Todos
+      return this.findAll({
+        where: { completed: true },
+        order: [["id", "ASC"]],
+      });
+    }
+    markAsCompleted() {
+      return this.update({ completed: true });
+    }
+    setcompletionstatus(bool) {
+      const notbool = !bool;
+      return this.update({ completed: notbool });
     }
   }
   Todo.init(

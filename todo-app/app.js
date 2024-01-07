@@ -13,6 +13,7 @@ app.get("/", async function (request, response) {
   const overdueTodos = await Todo.overdue();
   const dueTodayTodos = await Todo.dueToday();
   const dueLaterTodos = await Todo.dueLater();
+  const completed = await Todo.completedItem();
   // const markAsCompleted = await Todo.markAsCompleted();
   // const Delete = await Todo.deletetodo({ where: { id: Todo.id } })
 
@@ -22,9 +23,16 @@ app.get("/", async function (request, response) {
       overdueTodos,
       dueTodayTodos,
       dueLaterTodos,
+      completed,
     });
   } else {
-    response.json({ allTodo });
+    response.json({
+      allTodo,
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+      completed,
+    });
   }
 });
 
@@ -36,8 +44,20 @@ app.get("/todos", async function (_request, response) {
 
   // FILL IN YOUR CODE HERE
   try {
-    const todos = await Todo.findAll();
-    return response.json(todos);
+    // const todos = await Todo.findAll();
+    // return response.json(todos);
+    const allTodo = await Todo.getTodo();
+    const overdueTodos = await Todo.overdue();
+    const dueTodayTodos = await Todo.dueToday();
+    const dueLaterTodos = await Todo.dueLater();
+    const completed = await Todo.completedItem();
+    response.json({
+      allTodo,
+      overdueTodos,
+      dueTodayTodos,
+      dueLaterTodos,
+      completed,
+    });
   } catch (error) {
     console.log(error);
     return response.status(500).json({ error: "Internal Server Error" });
@@ -74,7 +94,9 @@ app.post("/todos", async function (request, response) {
 app.put("/todos/:id", async function (request, response) {
   const todo = await Todo.findByPk(request.params.id);
   try {
-    const updatedTodo = await todo.markAsCompleted(true);
+    const status = todo.completed;
+    //logic to toogle checkbox if true than do false and vise-versa
+    const updatedTodo = await todo.setcompletionstatus(status);
     return response.json(updatedTodo);
   } catch (error) {
     console.log(error);
@@ -82,15 +104,11 @@ app.put("/todos/:id", async function (request, response) {
   }
 });
 
-app.delete("/todos/:id", async (request, response) => {
+app.delete("/todos/:id/delete", async (request, response) => {
   console.log("Delete a todo by ID:", request.params.id);
 
   try {
-    const deletedItem = await Todo.destroy({
-      where: {
-        id: request.params.id,
-      },
-    });
+    const deletedItem = await Todo.deletetodo(request.params.id);
     response.send(deletedItem ? true : false);
   } catch (error) {
     console.error(error);
