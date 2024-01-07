@@ -38,20 +38,22 @@ describe("Todo Application", function () {
       dueDate: new Date().toISOString().split("T")[0],
       completed: false,
     });
-    //getting all todos
+    //getting all todos from database
     const groupOfTodos = await agent
       .get(`/todos`)
       .set("Accepts", "application/json"); //This method is used to set HTTP headers for the request.
     const parsedgroupOfTodos = JSON.parse(groupOfTodos.text);
+    //counting todo to find last added todo
     const dueTodaycount = parsedgroupOfTodos.dueTodayTodos.length;
+    //getting last todo from array of all todos
     const lastTodo = parsedgroupOfTodos.dueTodayTodos[dueTodaycount - 1]; //getting last todo array
-    const booleanValue = lastTodo.completed;
+    const booleanValue = lastTodo.completed; //initial value
     console.log("Last Todo", lastTodo);
     const updatedresponse1 = await agent
       .put(`/todos/${lastTodo.id}`)
       .send({ completed: booleanValue });
     const updatedparsedResponse = JSON.parse(updatedresponse1.text);
-    const oppositeboolean = !booleanValue;
+    const oppositeboolean = !booleanValue; //after updated value
     console.log("OppositeBoolean", oppositeboolean);
     expect(updatedparsedResponse.completed).toBe(oppositeboolean);
   });
