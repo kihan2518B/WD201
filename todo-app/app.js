@@ -3,13 +3,13 @@ const app = express();
 const { Todo } = require("./models");
 const path = require("path");
 const bodyParser = require("body-parser");
-const csrf = require("csurf");
+const csrf = require("tiny-csrf");
 const cookieParser = require("cookie-parser");
-app.use(bodyParser.json());
 
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("Shh! some secret string"));
-app.use(csrf({ cookie: true }));
+app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"])); //THE TEXT SHOULD BE OF 32 CHARACTERS ONLY
 
 app.get("/", async function (request, response) {
   // response.send("Hello World");

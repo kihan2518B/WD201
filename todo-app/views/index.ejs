@@ -10,7 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         var token = document.querySelector('meta[name="csrf-Token"]').getAttribute("content");
-        console.log("csrf", token)
+        // console.log("csrf", token)
         function updateTodo(id) {
             const checkboxid = document.getElementById(`checkbox${id}`);
             const tododata = checkboxid.checked;
