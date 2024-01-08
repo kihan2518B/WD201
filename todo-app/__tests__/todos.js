@@ -1,15 +1,19 @@
 const request = require("supertest");
-
+var cheerio = require("cheerio");
 const db = require("../models/index");
 const app = require("../app");
 // const { Json } = require("sequelize/types/utils");
 
 let server, agent;
+function extractCsrf(res) {
+  var $ = cheerio.load(res.text);
+  return $("[name=_csrf]").val();
+}
 
 describe("Todo Application", function () {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(3000, () => {});
+    server = app.listen(4000, () => {});
     agent = request.agent(server);
   });
 
@@ -23,20 +27,26 @@ describe("Todo Application", function () {
   });
 
   test("Creates a todo and responds with json at /todos POST endpoint", async () => {
+    const res = await agent.get("/");
+    const token = extractCsrf(res);
     const response = await agent.post("/todos").send({
       title: "Buy milk",
       dueDate: new Date().toISOString().split("T")[0],
       completed: false,
+      _csrf: token,
     });
     expect(response.statusCode).toBe(302); //302 is success code for http redirect
   });
 
   test("Toogles completion status)if true then do false and vice versa", async () => {
+    let res = await agent.get("/");
+    let token = extractCsrf(res);
     //creating todo
-    const response = await agent.post("/todos").send({
+    await agent.post("/todos").send({
       title: "Buy milk",
       dueDate: new Date().toISOString().split("T")[0],
       completed: false,
+      _csrf: token,
     });
     //getting all todos from database
     const groupOfTodos = await agent
@@ -48,10 +58,16 @@ describe("Todo Application", function () {
     //getting last todo from array of all todos
     const lastTodo = parsedgroupOfTodos.dueTodayTodos[dueTodaycount - 1]; //getting last todo array
     const booleanValue = lastTodo.completed; //initial value
+
     console.log("Last Todo", lastTodo);
-    const updatedresponse1 = await agent
-      .put(`/todos/${lastTodo.id}`)
-      .send({ completed: booleanValue });
+
+    res = await agent.get("/");
+    token = extractCsrf(res);
+
+    const updatedresponse1 = await agent.put(`/todos/${lastTodo.id}`).send({
+      completed: booleanValue,
+      _csrf: token,
+    });
     const updatedparsedResponse = JSON.parse(updatedresponse1.text);
     const oppositeboolean = !booleanValue; //after updated value
     console.log("OppositeBoolean", oppositeboolean);

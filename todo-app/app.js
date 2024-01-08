@@ -5,12 +5,11 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const csrf = require("csurf");
 const cookieParser = require("cookie-parser");
+app.use(bodyParser.json());
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("Shh! some secret string"));
 app.use(csrf({ cookie: true }));
-
-app.use(bodyParser.json());
 
 app.get("/", async function (request, response) {
   // response.send("Hello World");

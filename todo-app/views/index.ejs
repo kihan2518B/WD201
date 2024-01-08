@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="./css/styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        var token = document.querySelector('meta[name="csrf-Token"]').getAttribute("content")
+        var token = document.querySelector('meta[name="csrf-Token"]').getAttribute("content");
+        console.log("csrf", token)
         function updateTodo(id) {
             const checkboxid = document.getElementById(`checkbox${id}`);
             const tododata = checkboxid.checked;
@@ -17,10 +18,10 @@
 
             fetch(`/todos/${id}`, {  //Route To be send
                 method: "put", //Specefies Methode It can Be any
-                headers: { "content-type": "aplication/json" },
+                headers: { "content-type": "application/json" },
                 body: JSON.stringify({ //Gives A request with body
-                    completed: tododata,
-                    "_csrf": token
+                    "_csrf": token,
+                    completed: tododata
                 })
             })
                 .then((res) => {
