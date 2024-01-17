@@ -3,7 +3,7 @@ body {
     background: url(../Images/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg);
     background-size: cover;
     font-family: 'Times New Roman', Times, serif;
-    color: blue;
+    /* color: blue; */
     box-sizing: border-box;
 }
 
