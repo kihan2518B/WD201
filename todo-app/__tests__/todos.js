@@ -9,6 +9,15 @@ function extractCsrf(res) {
   var $ = cheerio.load(res.text);
   return $("[name=_csrf]").val();
 }
+const login = async (agent, username, password) => {
+  let res = await agent.get("/login");
+  let token = extractCsrf(res);
+  res = await agent.post("/session").send({
+    email: username,
+    password: password,
+    _csrf: token,
+  });
+};
 
 describe("Todo Application", function () {
   beforeAll(async () => {
@@ -39,7 +48,18 @@ describe("Todo Application", function () {
     expect(res.statusCode).toBe(302);
   });
 
+  test("SignOut", async () => {
+    let res = await agent.get("/todos");
+    expect(res.statusCode).toBe(200);
+    res = await agent.get("/signout");
+    expect(res.statusCode).toBe(302);
+    res = await agent.get("/todos");
+    expect(res.statusCode).toBe(302);
+  });
+
   test("Creates a todo and responds with json at /todos POST endpoint", async () => {
+    const agent = request.agent(server);
+    await login(agent, "usera@gmail.com", "123456789");
     let res = await agent.get("/todos");
     let token = extractCsrf(res);
     const response = await agent.post("/todos").send({
@@ -52,6 +72,8 @@ describe("Todo Application", function () {
   });
 
   test("Toogles completion status if true then do false and vice versa", async () => {
+    const agent = request.agent(server);
+    await login(agent, "usera@gmail.com", "123456789");
     let res = await agent.get("/todos");
     let token = extractCsrf(res);
     //creating todo
@@ -64,7 +86,7 @@ describe("Todo Application", function () {
     //getting all todos from database
     const groupOfTodos = await agent
       .get(`/todos`)
-      .set("Accepts", "application/json"); //This method is used to set HTTP headers for the request.
+      .set("Accept", "application/json"); //This method is used to set HTTP headers for the request.
     const parsedgroupOfTodos = JSON.parse(groupOfTodos.text);
     //counting todo to find last added todo
     const dueTodaycount = parsedgroupOfTodos.dueTodayTodos.length;
@@ -88,6 +110,8 @@ describe("Todo Application", function () {
   });
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
+    const agent = request.agent(server);
+    await login(agent, "usera@gmail.com", "123456789");
     let res = await agent.get("/todos");
     let token = extractCsrf(res);
     //creating todo
@@ -100,21 +124,24 @@ describe("Todo Application", function () {
     //getting all todos from database
     const groupOfTodos = await agent
       .get(`/todos`)
-      .set("Accepts", "application/json"); //This method is used to set HTTP headers for the request.
+      .set("Accept", "application/json"); //This method is used to set HTTP headers for the request.
     const parsedgroupOfTodos = JSON.parse(groupOfTodos.text);
     //counting todo to find last added todo
     const dueTodaycount = parsedgroupOfTodos.dueTodayTodos.length;
     //getting last todo from array of all todos
     const lastTodo = parsedgroupOfTodos.dueTodayTodos[dueTodaycount - 1]; //getting last todo array
 
-    // console.log("Last Todo", lastTodo);
+    console.log("Last Todo", lastTodo);
 
     res = await agent.get("/todos");
     token = extractCsrf(res);
 
-    const deletedresponse = await agent.delete(`/todos/${lastTodo.id}`).send({
-      _csrf: token,
-    });
+    const deletedresponse = await agent
+      .delete(`/todos/${lastTodo.id}/delete`)
+      .send({
+        _csrf: token,
+      });
+    console.log("deleted response", deletedresponse);
     // const updatedparsedResponse = JSON.parse(updatedresponse1.text);
     // const oppositeboolean = !booleanValue; //after updated value
     expect(deletedresponse.statusCode).toBe(200);
