@@ -11,12 +11,15 @@ const saltRounds = 10;
 const passport = require("passport");
 const ConnectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
+const flash = require("connect-flash");
 const LocalStrategy = require("passport-local");
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("Shh! some secret string"));
 app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"])); //THE TEXT SHOULD BE OF 32 CHARACTERS ONLY
+app.set("views", path.join(__dirname, "views"));
+app.use(flash());
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
@@ -28,6 +31,12 @@ app.use(
     },
   }),
 );
+
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -40,16 +49,16 @@ passport.use(
     },
     (username, password, done) => {
       User.findOne({ where: { email: username } })
-        .then(async (user) => {
+        .then(async function (user) {
           const result = await bcrypt.compare(password, user.password);
           if (result) {
             return done(null, user);
           } else {
-            return done("Invalid Password");
+            return done(null, false, { message: "Invalid password" });
           }
         })
-        .catch((error) => {
-          return error;
+        .catch((err) => {
+          return done(err);
         });
     },
   ),
@@ -114,9 +123,21 @@ app.get(
 
 //We will Make Route for signup page
 app.post("/users", async (request, response) => {
+  const { firstName, lastName, email, password } = request.body;
+
+  // Check if the password is empty
+  if (!password || !firstName || !email) {
+    // Flash an error message
+    request.flash(
+      "error",
+      "Password and firstname and Email are must required!",
+    );
+    // Redirect to the same page or a designated error page
+    return response.redirect("/signup"); // You can customize the redirect URL
+  }
   //Hashing The password
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
-  console.log(hashedPwd);
+  // console.log(hashedPwd);
   //have to create User
   try {
     const user = await User.create({
@@ -148,10 +169,13 @@ app.get("/login", (request, response) => {
 });
 app.post(
   "/session",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
   (request, response) => {
     console.log(request.user);
-    response.redirect("todos");
+    response.redirect("/todos");
   },
 );
 
@@ -180,7 +204,21 @@ app.post(
   "/todos",
   ConnectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
-    console.log("user:", request.user.id);
+    // console.log("user:", request.user.id);
+    const { title, dueDate } = request.body;
+    //check title nd duedate are empty
+    if (!dueDate || !title) {
+      // Flash an error message
+      request.flash("error", "Todo Title and Duedate both are required!");
+      // Redirect to the same page or a designated error page
+      return response.redirect("/todos");
+    } else if (title.length < 5) {
+      // check if title length is less than 5
+      // Flash an error message
+      request.flash("error", "todo tile should be atleast 5 characters long!");
+      // Redirect to the same page or a designated error page
+      return response.redirect("/todos");
+    }
     try {
       await Todo.addTodo({
         title: request.body.title,
