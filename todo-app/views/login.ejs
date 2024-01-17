@@ -36,13 +36,7 @@
                         <a href="/signup">Not a user? Signup</a>
                     </div>
                 </form>
-                <% if(messages && messages.error && messages.error.length> 0) { %>
-                    <% for(var i=0; i<messages.error.length; i++) { %>
-                        <li>
-                            <%= messages.error[i] %>
-                        </li>
-                        <% } %>
-                            <% } %>
+                <%- include('notifications.ejs') %>
         </div>
     </div>
 </body>
