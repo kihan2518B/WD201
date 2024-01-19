@@ -162,14 +162,25 @@ app.post("/users", async (request, response) => {
 });
 
 app.get("/signup", (request, response) => {
-  response.render("signup", {
-    title: "SignUp",
-    csrfToken: request.csrfToken(),
-  });
+  if (request.isAuthenticated()) {
+    response.redirect("/todos");
+  } else {
+    response.render("signup", {
+      title: "SignUp",
+      csrfToken: request.csrfToken(),
+    });
+  }
 });
 
 app.get("/login", (request, response) => {
-  response.render("login", { title: "Login", csrfToken: request.csrfToken() });
+  if (request.isAuthenticated()) {
+    response.redirect("/todos");
+  } else {
+    response.render("login", {
+      title: "Login",
+      csrfToken: request.csrfToken(),
+    });
+  }
 });
 app.post(
   "/session",
